@@ -1,0 +1,22 @@
+@HOST = http://localhost:3000
+###
+GET {{HOST}}/cats
+
+###
+POST {{HOST}}/cats
+Content-Type: application/json
+
+{
+    "type": "low-end",
+    "origin": "Italy",
+    "weight": "4.22"
+}
+
+###
+GET {{HOST}}/cats/breed
+
+###
+GET {{HOST}}/cats/breed/3
+
+###
+GET {{HOST}}/cats/breed?country=Germany
