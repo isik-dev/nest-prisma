@@ -1,12 +1,15 @@
-import { Controller, Get, Req, Param, Query, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Param,
+  Query,
+  Post,
+  Body,
+  Redirect,
+} from '@nestjs/common';
 import { Request } from 'express';
-
-interface ICatsBreed {
-  id: string;
-  type: string;
-  origin: string;
-  weight: string;
-}
+import { CatsBreedReq, CatsBreedRes } from './create-cats.dto';
 
 const dummyRes = [
   { id: '1', type: 'high-end', origin: 'Germany', weight: '7' },
@@ -17,32 +20,33 @@ const dummyRes = [
 @Controller('cats') // prefix
 export class AppController {
   @Get() // endpoint: /cats
-  findAll(@Req() request: Request): ICatsBreed[] {
+  findAll(@Req() request: Request): CatsBreedRes[] {
     console.log('request.header', request.body);
     return dummyRes;
   }
 
   @Post()
-  create(
-    @Body() payload: { type: string; origin: string; weight: string },
-  ): ICatsBreed[] {
+  async create(@Body() payload: CatsBreedReq): Promise<CatsBreedRes[]> {
     console.log('payload', payload);
     dummyRes.push({ id: 'randmonlyGeneratedID', ...payload });
     return dummyRes;
   }
 
   @Get('breed')
-  getBreed(@Query('country') country: string): ICatsBreed[] {
-    console.log('country', country);
-    if (country === 'Germany') {
-      return dummyRes.filter((cat) => cat.origin === 'Germany');
-    } else {
-      return dummyRes;
-    }
+  getBreed(@Query('country') country: string): CatsBreedRes[] {
+    return dummyRes.filter((cat) => cat.origin === country);
   }
 
   @Get('breed/:id')
-  getUniqueBreed(@Param('id') id: string): ICatsBreed[] {
+  getUniqueBreed(@Param('id') id: string): CatsBreedRes[] {
     return dummyRes.filter((cat) => cat.id === id);
+  }
+
+  @Get('isik-tech') // some
+  @Redirect('https://isik-tech.com')
+  getDocs() {
+    return {
+      url: 'https://isik-tech.com',
+    };
   }
 }
